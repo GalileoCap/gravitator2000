@@ -1,0 +1,75 @@
+---
+title: "gravitator2000"
+author: "Galileo Cappella"
+date: "October 20, 2018"
+output: html_document
+---
+
+```{r}
+library(plotly)
+```
+
+
+```{r}
+#Primero defino algunos valores constantes de los planetas qe vaya a usar
+G <- 6.674e-11 #Constante universal
+g <- 9.8 #Aceleracion de la gravedad en la Tierra
+
+Sun <- c(1.9890, 695508) #Masa en kilos, radio en kilometros
+Mercury <- c(3.285e+23, 2449)
+Venus <- c(4.867e+24, 6052)
+Earth <- c(5.972e+24, 6371)
+Moon <- c(7.347e+22, 1737)
+Mars <- c(6.39e+23, 3390)
+Jupiter <- c(1.898e+27, 69911)
+Saturn <- c(5.683e+26, 58232)
+Uranus <- c(8.681e+25, 25362)
+Pluto <- c(1.309e+22, 1188)
+```
+
+```{r}
+gravitator <- function(planeta, mP, hM, col, add = TRUE){ #pP: masaPersona; hM: Altura maxima del salto
+  
+    t <- sqrt(hM*2/g) #Calcula el tiempo qe tarda en llegar a esa altura
+  
+    v0 <- g*t #Calcula la velocidad inicial
+  
+  FGp <- (G*planeta[1]*mP)/(planeta[2]*10^3)^2 #Calcula la fuerza gravitacional qe sentirias en el planeta qe eligiste
+  
+  a <- FGp/mP #Calcula la aceleracion en ese planeta
+  
+  debug <- c("V0:", v0, "FGp:", FGp, "a:", a, t)
+  print(debug)
+
+  curve(v0*x-a/2*x^2, #Grafica el salto
+        from = 0,
+        to = 2*v0/a, #Solvente
+        xlab = "Time (seconds)",
+        ylab = "Height (meters)",
+        add = add,
+        col = col)
+}
+```
+
+```{r}
+ejemplo1 <- function(){ #Valores ajustados para mi vs un chico promedio de 13 anios
+  gravitator(Earth, 64, 0.4318, "blue", FALSE)
+  gravitator(Earth, 45, 0.4318, "red")
+}
+
+ejemplo2 <- function(){
+  gravitator(Moon, 45, 0.4318, "blue", FALSE)
+}
+
+ejemplo1()
+```
+```{r}
+#Comparo mi salto en la Tierra con mi salto en la Luna
+
+TvsL <- function(){
+  gravitator(Moon, 45, 0.4318, "blue", FALSE)
+  gravitator(Earth, 45, 0.4318, "red")
+}
+
+TvsL()
+```
